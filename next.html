@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Envelope + Letter (Open/Close on Click)</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <audio autoplay="autoplay" height="100" width="100" id="myAudio">
+        <source src="aud.mp3" type="audio/mp3" />
+        <embed height="100" width="100" src="aud.mp3 " />
+    </audio>
+    <div class="container">
+        <div class="envelope-wrapper">
+            <div class="envelope">
+                <div class="letter">
+                    <div class="text">
+                        <strong>Dear Nany</strong>
+                        <p>
+                            I can't send you a real gift T_T ... hope this makes you smile too :D (send smiling pics as proof XD) ... Happy Birthday! 🎉
+                        </p>
+                        <form id="penguin-form" style="margin-top:18px; font-size:0.98em;">
+                            <label>Is Igloo possibly a penguin?</label><br>
+                            <input type="radio" id="Yes" name="igloo" value="yes" required>
+                            <label for="yes" onclick="window.location.href='sgtpuffin.html'">Yes</label>
+                            <input type="radio" id="Obviously" name="igloo" value="no">
+                            <label for="no" onclick="window.location.href='sgtpuffin.html'">No</label>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="heart"></div>
+        </div>
+    </div>
+    <script>
+        const envelope = document.querySelector('.envelope-wrapper');
+        let flapOpened = false;
+
+        envelope.addEventListener('click', () => {
+            if (!flapOpened) {
+                envelope.classList.add('flap');
+                flapOpened = true;
+            } else {
+                window.location.href = 'sgtpuffin.html';
+            }
+        });
+    </script>
+</body>
+</html>
