@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sgt. Puffin Wishes You!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: #e3f6fd;
+            background-image: url('forest2.avif'); /* Add your forest image here */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            width: 100vw;
+            overflow-x: hidden;
+        }
+        .main-content {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            min-height: 100vh;
+        }
+        .left-side, .right-side {
+            flex: 1 1 0;
+            position: relative;
+            min-width: 0;
+            min-height: 0;
+        }
+        .left-side {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            height: 100vh;
+            position: relative;
+        }
+        .right-side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            background: transparent;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden; /* Prevent overflow */
+        }
+        .branch-img {
+            width: 60vw;
+            max-width: 600px;
+            min-width: 180px;
+            height: auto;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-10%);
+            z-index: 1;
+            pointer-events: none;
+            user-select: none;
+        }
+        .puffin-img {
+            width: 34vw;
+            max-width: 340px;
+            min-width: 100px;
+            height: auto;
+            z-index: 2;
+            position: absolute;
+            left: 8vw;
+            top: 50%;
+            transform: translateY(-40%);
+            filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.18));
+        }
+        .scrap {
+            position: absolute;
+            left: 24vw;
+            top: 18vh;
+            transform: none;
+            width: 36vw;
+            max-width: 360px;
+            min-width: 160px;
+            height: 200px;
+            background: #fffbe7;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            border: 2.5px dashed #fbc02d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: #c2185b;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            opacity: 0;
+            clip-path: inset(0 50% 0 50%);
+            transition: 
+                opacity 0.4s cubic-bezier(.77,0,.18,1),
+                clip-path 0.7s cubic-bezier(.77,0,.18,1);
+            z-index: 3;
+            padding: 40px 32px 32px 32px;
+            box-sizing: border-box;
+        }
+        .scrap img {
+            width: 80px;
+            margin-bottom: 12px;
+            margin-top: -10px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.10));
+        }
+        .scrap.open {
+            opacity: 1;
+            clip-path: inset(0 0 0 0);
+        }
+        .scrap.close {
+            opacity: 0;
+            clip-path: inset(0 50% 0 50%);
+        }
+        .open-btn {
+            margin-top: 12px;
+            background: #fbc02d;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 32px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: background 0.2s;
+            z-index: 4;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+        .open-btn:hover {
+            background: #c2185b;
+            color: #fffbe7;
+        }
+        .letter-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: static;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            min-width: 0;
+            min-height: 0;
+        }
+        .letter {
+            width: 98vw;
+            max-width: 480px;
+            min-width: 0;
+            min-height: 120px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            border: 2.5px solid #bdbdbd;
+            overflow: auto; /* Allow scroll if needed */
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.7s cubic-bezier(.77,0,.18,1);
+            opacity: 0;
+            padding: 0 5vw;
+            box-sizing: border-box;
+            max-height: 70vh; /* Prevent overflow on short screens */
+        }
+        .letter.open {
+            transform: scaleY(1);
+            opacity: 1;
+            transition: transform 0.7s cubic-bezier(.77,0,.18,1), opacity 0.4s;
+        }
+        .letter-content {
+            padding: 32px 0 24px 0;
+            font-size: 1.15em;
+            color: #4e342e;
+            font-family: 'Segoe UI', serif;
+            word-break: break-word;
+        }
+        .unfurl-btn {
+            margin-top: 28px;
+            background: linear-gradient(90deg, #fbc02d 0%, #c2185b 100%);
+            color: #fffbe7;
+            border: none;
+            border-radius: 16px;
+            padding: 22px 60px;
+            font-size: 1.6em;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(76, 41, 19, 0.18), 0 1.5px 0 #fffbe7 inset;
+            transition: 
+                background 0.25s,
+                color 0.25s,
+                transform 0.12s,
+                box-shadow 0.18s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 1.2px;
+            position: relative;
+            overflow: hidden;
+            max-width: 90vw;
+            min-width: 0;
+            white-space: normal;
+        }
+        .unfurl-btn::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.18);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+            z-index: 0;
+        }
+        .unfurl-btn:hover::before {
+            width: 220%;
+            height: 600%;
+        }
+        .unfurl-btn:hover {
+            background: linear-gradient(90deg, #c2185b 0%, #fbc02d 100%);
+            color: #4e342e;
+            transform: scale(1.04);
+            box-shadow: 0 8px 32px rgba(76, 41, 19, 0.22);
+        }
+        .unfurl-btn span {
+            position: relative;
+            z-index: 1;
+        }
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .left-side, .right-side {
+                width: 100vw;
+                height: 50vh;
+                min-height: 0;
+            }
+            .right-side {
+                height: 50vh;
+                min-height: 0;
+            }
+            .letter {
+                max-width: 98vw;
+                padding: 0 3vw;
+                max-height: 40vh;
+            }
+            .unfurl-btn {
+                font-size: 1.2em;
+                padding: 16px 32px;
+            }
+        }
+        @media (max-width: 600px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .left-side, .right-side {
+                width: 100vw;
+                height: 50vh;
+                min-height: 0;
+            }
+            .right-side {
+                height: 50vh;
+                min-height: 0;
+            }
+            .letter {
+                max-width: 98vw;
+                padding: 0 2vw;
+                max-height: 36vh;
+                font-size: 1em;
+            }
+            .unfurl-btn {
+                font-size: 1em;
+                padding: 12px 12vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="left-side">
+            <div class="scrap" id="scrap-note">
+                <img src="sgtpuffin.png" alt="Sgt. Puffin" />
+                Happy Birthday, Nany! 🎉
+            </div>
+            <img src="sgtpuffin.png" alt="Sgt. Puffin" class="puffin-img"/>
+            <img src="tree.png" alt="Branch" class="branch-img"/>
+        </div>
+        <div class="right-side">
+            <div class="letter-container">
+                <div class="letter" id="letter">
+                    <div class="letter-content">
+                        <h2>To my cute little Sunflower 🌻</h2>
+                        <p>
+                            Wishing you a very very happy birthday :D ... I am really proud of the strong girl you are, continue to shine and grow like this. I am your biggest fan :D<br>
+                            <span style="font-size:1.2em;">— Bhavi</span>
+                        </p>
+                        <img src="hands.jpg" alt="Hands" style="display:block; margin: 24px auto 0 auto; max-width: 120px; width: 60%; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.10);" />
+                    </div>
+                </div>
+                <button class="unfurl-btn" id="unfurlBtn"><span>Open Letter</span></button>
+                <audio id="auroraAudio" src="aurora.mp3"></audio>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('unfurlBtn').addEventListener('click', function() {
+            document.getElementById('letter').classList.add('open');
+            this.style.display = 'none';
+            var audio = document.getElementById('auroraAudio');
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play();
+            }
+        });
+    </script>
+</body>
+</html>
